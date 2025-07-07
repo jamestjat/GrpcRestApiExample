@@ -6,6 +6,7 @@ A modern .NET 9.0 gRPC service with JSON transcoding that provides both gRPC and
 
 - **Dual Protocol Support**: Same service accessible via both gRPC and REST APIs
 - **JSON Transcoding**: Automatic HTTP/JSON to gRPC conversion
+- **Swagger/OpenAPI**: Interactive API documentation and testing interface
 - **Modern .NET 9.0**: Built with the latest .NET framework
 - **Protocol Buffers**: Type-safe service definitions
 - **Development Ready**: Configured for both HTTP/1.1 and HTTP/2 protocols
@@ -37,12 +38,17 @@ dotnet run
 The application will start and listen on:
 - **HTTP**: http://localhost:5075
 - **HTTPS**: https://localhost:7108
+- **Swagger UI**: http://localhost:5075 (Interactive API documentation)
 
 ## 🌐 API Endpoints
 
+### Swagger UI
+- **Interactive Documentation**: http://localhost:5075
+- **OpenAPI Specification**: http://localhost:5075/swagger/v1/swagger.json
+
 ### REST API (JSON Transcoding)
 - **GET** `/v1/greeter/{name}` - Send a greeting via REST
-- **GET** `/` - Health check endpoint
+- **GET** `/health` - Health check endpoint
 
 ### gRPC API
 - **Service**: `greet.Greeter`
@@ -50,6 +56,13 @@ The application will start and listen on:
 - **Proto**: Located in `Protos/greet.proto`
 
 ## 📝 Usage Examples
+
+### Swagger UI (Recommended)
+1. Open http://localhost:5075 in your browser
+2. Expand the `/v1/greeter/{name}` endpoint
+3. Click "Try it out"
+4. Enter a name (e.g., "World")
+5. Click "Execute" to test the API
 
 ### REST API Call
 ```bash
@@ -134,6 +147,8 @@ The application is configured to support both HTTP/1.1 and HTTP/2:
 ### Package Dependencies
 - **Grpc.AspNetCore**: Core gRPC support
 - **Microsoft.AspNetCore.Grpc.JsonTranscoding**: JSON transcoding functionality
+- **Microsoft.AspNetCore.Grpc.Swagger**: gRPC Swagger/OpenAPI integration
+- **Swashbuckle.AspNetCore**: Swagger UI and OpenAPI documentation
 
 ## 🔧 Development
 

@@ -7,9 +7,10 @@ option csharp_namespace = "GrpcRestApiExample";
 
 package greet;
 
-// The greeting service definition.
+// The greeting service definition - provides friendly greetings.
 service Greeter {
-  // Sends a greeting
+  // Sends a personalized greeting to the specified name.
+  // Returns a friendly greeting message.
   rpc SayHello (HelloRequest) returns (HelloReply) {
     // This annotation maps this RPC to a GET request
     option (google.api.http) = {
@@ -20,10 +21,12 @@ service Greeter {
 
 // The request message containing the user's name.
 message HelloRequest {
+  // The name of the person to greet. This will be included in the greeting message.
   string name = 1;
 }
 
-// The response message containing the greetings.
+// The response message containing the greeting.
 message HelloReply {
+  // The complete greeting message returned to the user.
   string message = 1;
 }
