@@ -1,0 +1,158 @@
+### gRPC REST API Example Tests using httpyac
+### This file tests both gRPC protocol and REST API endpoints
+
+# Variables
+@host = http://localhost:5075
+@grpcHost = localhost:5075
+@name = World
+@testName = HttpYac
+
+### Test 1: Basic REST API Call (JSON Transcoding)
+# Test the REST endpoint that maps to gRPC SayHello
+GET {{host}}/v1/greeter/{{name}}
+Accept: application/json
+
+### Test 2: REST API with different name
+GET {{host}}/v1/greeter/{{testName}}
+Accept: application/json
+
+### Test 3: REST API with special characters
+GET {{host}}/v1/greeter/John%20Doe
+Accept: application/json
+
+### Test 4: Root endpoint check
+GET {{host}}/
+Accept: text/plain
+
+### Test 5: gRPC Protocol Test (requires proto file)
+# Note: This requires the proto file to be available
+# proto < ../Protos/greet.proto
+
+# GRPC {{grpcHost}}/greet.Greeter/SayHello
+# {
+#   "name": "{{name}}"
+# }
+
+### Test 6: gRPC with different name
+# GRPC {{grpcHost}}/greet.Greeter/SayHello
+# {
+#   "name": "{{testName}}"
+# }
+
+### Test 7: Error handling - Invalid endpoint
+GET {{host}}/v1/greeter/
+Accept: application/json
+
+### Test 8: Health check style test
+GET {{host}}/v1/greeter/HealthCheck
+Accept: application/json
+
+### Test 9: Performance test with assertion
+GET {{host}}/v1/greeter/Performance
+Accept: application/json
+
+?? status == 200
+?? duration < 1000
+
+### Test 10: Response content validation
+GET {{host}}/v1/greeter/ValidationTest
+Accept: application/json
+
+?? status == 200
+?? body.message
+?? body.message.includes("ValidationTest")
+
+###
+# Test with custom headers
+GET {{host}}/v1/greeter/CustomHeaders
+Accept: application/json
+User-Agent: httpyac-test
+X-Test-Header: test-value
+
+### 
+# POST request test (if your service supports it)
+# Note: The current proto only defines GET, but this shows how you'd test POST
+# POST {{host}}/v1/greeter
+# Content-Type: application/json
+# 
+# {
+#   "name": "PostTest"
+# }
+
+###
+# Variables for multiple environment testing
+# You can uncomment and modify these for different environments
+
+# @name local
+# @host = http://localhost:5075
+
+# @name dev  
+# @host = https://dev-api.example.com
+
+# @name prod
+# @host = https://api.example.com
+
+###
+# Test with script for dynamic testing
+GET {{host}}/v1/greeter/ScriptTest
+Accept: application/json
+
+{{
+  // Pre-request script
+  console.log('Testing greeter service');
+  const timestamp = new Date().toISOString();
+  exports.timestamp = timestamp;
+}}
+
+{{
+  // Post-request script
+  if (response.status === 200) {
+    console.log('✅ Test passed');
+    console.log('Response:', response.body);
+  } else {
+    console.log('❌ Test failed');
+  }
+}}
+
+###
+# Batch test with multiple names
+GET {{host}}/v1/greeter/Alice
+GET {{host}}/v1/greeter/Bob  
+GET {{host}}/v1/greeter/Charlie
+
+###
+# Test with timeout
+GET {{host}}/v1/greeter/TimeoutTest
+Accept: application/json
+
+?? duration < 5000
+
+###
+# Test Unicode support
+GET {{host}}/v1/greeter/José
+GET {{host}}/v1/greeter/测试
+GET {{host}}/v1/greeter/🚀
+
+###
+# If you want to enable actual gRPC testing, uncomment and modify:
+# 
+# proto < ../Protos/greet.proto
+# proto < ../Protos/google/api/annotations.proto  
+# proto < ../Protos/google/api/http.proto
+# 
+# ### gRPC Direct Test
+# GRPC {{grpcHost}}/greet.Greeter/SayHello
+# {
+#   "name": "gRPC Test"
+# }
+# 
+# ### gRPC with metadata
+# GRPC {{grpcHost}}/greet.Greeter/SayHello
+# grpc-metadata-custom: test-value
+# grpc-metadata-user-id: 12345
+# 
+# {
+#   "name": "Metadata Test"
+# }
+
+### End of tests
