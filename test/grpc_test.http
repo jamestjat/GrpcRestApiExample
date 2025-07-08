@@ -24,14 +24,18 @@ Accept: application/json
 GET {{host}}/
 Accept: text/plain
 
-### Test 5: gRPC Protocol Test (requires proto file)
-# Note: This requires the proto file to be available
-# proto < ../Protos/greet.proto
+### Test 5: gRPC Protocol Test
 
-# GRPC {{grpcHost}}/greet.Greeter/SayHello
-# {
-#   "name": "{{name}}"
-# }
+# All directives below apply to the GRPC request.
+# They must be grouped together with no blank lines.
+includeDirs:
+  - ../Protos
+proto < ../Protos/greet.proto
+
+GRPC {{grpcHost}}/greet.Greeter/SayHello
+{
+  "name": "{{name}}"
+}
 
 ### Test 6: gRPC with different name
 # GRPC {{grpcHost}}/greet.Greeter/SayHello

@@ -5,21 +5,20 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddGrpc().AddJsonTranscoding();
 
-// Add Swagger/OpenAPI support for gRPC
-builder.Services.AddGrpcSwagger();
+// This call is required to make Swashbuckle aware of gRPC endpoints
+builder.Services.AddGrpcSwagger(); 
+
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo 
     { 
         Title = "gRPC REST API Example", 
-        Version = "v1",
-        Description = "A gRPC service with JSON transcoding that provides both gRPC and REST API endpoints"
+        Version = "v1" 
     });
 
-    // Include XML comments for better documentation
-    var filePath = Path.Combine(System.AppContext.BaseDirectory, "GrpcRestApiExample.xml");
+    // You can now add this line back as well if you wish
+    var filePath = Path.Combine(AppContext.BaseDirectory, "GrpcRestApiExample.xml");
     c.IncludeXmlComments(filePath);
-    c.IncludeGrpcXmlComments(filePath, includeControllerXmlComments: true);
 });
 
 var app = builder.Build();
